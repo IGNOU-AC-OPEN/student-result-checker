@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>IGNOU Grade Card Portal</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --blue-dark: #0a2558;
+    --blue-mid:  #1a3f8f;
+    --blue-light: #2256c7;
+    --gold: #c9a84c;
+    --gold-light: #e8c96a;
+    --bg: #f0f2f7;
+    --card: #ffffff;
+    --text: #1c1c2e;
+    --muted: #5a6070;
+    --pass: #1a7a4a;
+    --pass-bg: #e6f7ed;
+    --fail: #b91c1c;
+    --fail-bg: #fde8e8;
+    --border: #d0d6e8;
+    --shadow: 0 4px 24px rgba(10,37,88,0.10);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text);
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 60%, var(--blue-light) 100%);
+    color: #fff;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      90deg,
+      rgba(255,255,255,0.03) 0px,
+      rgba(255,255,255,0.03) 1px,
+      transparent 1px,
+      transparent 60px
+    );
+  }
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px 40px;
+    border-bottom: 3px solid var(--gold);
+  }
+  .emblem {
+    width: 68px;
+    height: 68px;
+    flex-shrink: 0;
+    background: rgba(255,255,255,0.12);
+    border: 2px solid var(--gold);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+  }
+  .header-text h1 {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    text-transform: uppercase;
+  }
+  .header-text p {
+    margin-top: 4px;
+    font-size: 0.8rem;
+    font-weight: 300;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+  }
+  .header-bar {
+    background: var(--gold);
+    text-align: center;
+    padding: 6px 40px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+  }
+
+  /* ── MAIN ── */
+  main {
+    flex: 1;
+    padding: 40px 20px 60px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 28px;
+  }
+
+  /* ── SEARCH CARD ── */
+  .search-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    padding: 36px 40px 30px;
+    width: 100%;
+    max-width: 520px;
+  }
+  .search-card h2 {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.15rem;
+    font-weight: 500;
+    color: var(--blue-dark);
+    margin-bottom: 22px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .search-card h2::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: var(--gold);
+    border-radius: 2px;
+  }
+
+  label {
+    display: block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  select, input[type="text"] {
+    width: 100%;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.88rem;
+    color: var(--text);
+    background: #f7f9fc;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    appearance: none;
+    outline: none;
+  }
+  select { cursor: pointer; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6070' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; padding-right: 36px; }
+  select:focus, input:focus { border-color: var(--blue-light); box-shadow: 0 0 0 3px rgba(34,86,199,0.10); background: #fff; }
+
+  .field { margin-bottom: 16px; }
+
+  .error-msg { font-size: 0.76rem; color: var(--fail); margin-top: 5px; display: none; }
+
+  .btn-search {
+    width: 100%;
+    margin-top: 8px;
+    padding: 12px;
+    background: var(--blue-dark);
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.1s;
+  }
+  .btn-search:hover { background: var(--blue-light); }
+  .btn-search:active { transform: scale(0.99); }
+
+  .note {
+    margin-top: 16px;
+    padding: 10px 14px;
+    background: #fffbef;
+    border-left: 3px solid var(--gold);
+    border-radius: 0 4px 4px 0;
+    font-size: 0.73rem;
+    color: #6b5000;
+    line-height: 1.55;
+  }
+
+  /* ── LOADING ── */
+  #loading {
+    display: none;
+    text-align: center;
+    color: var(--blue-mid);
+    font-size: 0.85rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    padding: 16px;
+  }
+  .spinner {
+    display: inline-block;
+    width: 20px; height: 20px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue-mid);
+    border-radius: 50%;
+    animation: spin 0.7s linear infinite;
+    vertical-align: middle;
+    margin-right: 8px;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ── RESULT CARD ── */
+  #result { display: none; width: 100%; max-width: 820px; animation: fadeUp 0.35s ease; }
+  @keyframes fadeUp { from { opacity:0; transform: translateY(14px); } to { opacity:1; transform: translateY(0); } }
+
+  .result-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .result-header {
+    background: linear-gradient(90deg, var(--blue-dark), var(--blue-mid));
+    color: #fff;
+    padding: 18px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .result-header .rh-left h3 {
+    font-family: 'EB Garamond', serif;
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+  .result-header .rh-left p {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 2px;
+    letter-spacing: 0.04em;
+  }
+  .status-badge {
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    flex-shrink: 0;
+    align-self: center;
+  }
+  .status-pass { background: var(--pass-bg); color: var(--pass); }
+  .status-fail { background: var(--fail-bg); color: var(--fail); }
+
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0;
+    border-bottom: 1px solid var(--border);
+  }
+  .info-item {
+    padding: 14px 28px;
+    border-right: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+  }
+  .info-item:nth-child(even) { border-right: none; }
+  .info-item .lbl {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 3px;
+  }
+  .info-item .val {
+    font-size: 0.88rem;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  /* ── TABLE ── */
+  .table-section { padding: 24px 28px; }
+  .table-section h4 {
+    font-family: 'EB Garamond', serif;
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--blue-dark);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .table-section h4::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+  thead tr { background: var(--blue-dark); color: #fff; }
+  thead th {
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background 0.15s; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: #f5f7ff; }
+  tbody td { padding: 11px 14px; color: var(--text); }
+  td.subj { font-weight: 500; }
+  td.marks-val { font-weight: 600; color: var(--blue-mid); }
+
+  .summary-row {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 16px;
+    flex-wrap: wrap;
+  }
+  .summary-chip {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 18px;
+    font-size: 0.8rem;
+  }
+  .summary-chip span { font-weight: 700; color: var(--blue-dark); }
+  .summary-chip.pct { border-color: var(--gold); }
+  .summary-chip.pct span { color: var(--gold); }
+
+  /* ── NO RECORD ── */
+  #no-record {
+    display: none;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 40px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    width: 100%;
+    max-width: 520px;
+    animation: fadeUp 0.3s ease;
+  }
+  #no-record .icon { font-size: 2.5rem; margin-bottom: 12px; }
+  #no-record p { font-size: 0.9rem; color: var(--muted); }
+  #no-record strong { display: block; color: var(--fail); font-size: 1rem; margin-bottom: 6px; }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--blue-dark);
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    padding: 14px 20px;
+    font-size: 0.72rem;
+    letter-spacing: 0.06em;
+    border-top: 2px solid var(--gold);
+  }
+  footer span { color: var(--gold-light); }
+
+  @media (max-width: 580px) {
+    .header-inner { padding: 16px 20px; }
+    .search-card { padding: 26px 20px 22px; }
+    .result-header { flex-direction: column; }
+    .info-item { padding: 12px 20px; }
+    .table-section { padding: 18px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="emblem"><img src="img/ignouLogo.png" alt="IGNOU Logo" style="width: 100%; height: 100%; object-fit: contain;"></div>
+    <div class="header-text">
+      <h1>Indira Gandhi National Open University</h1>
+      <p>Ministry of Education &nbsp;·&nbsp; Government of India</p>
+    </div>
+  </div>
+  <div class="header-bar">Grade Card / Marks Sheet — Academic Portal</div>
+</header>
+
+<main>
+  <div class="search-card">
+    <h2>Student Grade Card Search</h2>
+
+    <div class="field">
+      <label for="gradeStatus">Grade Card Status</label>
+      <select id="gradeStatus">
+        <option value="fresh">Fresh</option>
+        <option value="repeat">Repeat</option>
+        <option value="improvement">Improvement</option>
+        <option value="all" selected>All</option>
+      </select>
+    </div>
+
+    <div class="field">
+      <label for="enrollInput">Enrollment Number</label>
+      <input type="text" id="enrollInput" placeholder="Enter 14-digit enrollment number" maxlength="14" />
+      <div class="error-msg" id="errMsg">Please enter a valid 14-digit enrollment number.</div>
+    </div>
+
+    <button class="btn-search" onclick="handleSearch()">🔍 &nbsp;Search Grade Card</button>
+
+    <div class="note">
+      ⚠ In case any student is found to be booked under unfair means, the result of the particular student will be cancelled.
+    </div>
+  </div>
+
+  <div id="loading"><span class="spinner"></span> Fetching record, please wait…</div>
+  <div id="no-record">
+    <div class="icon">📭</div>
+    <strong>No Record Found</strong>
+    <p>The enrollment number you entered does not match any student in our database. Please verify and try again.</p>
+  </div>
+  <div id="result"></div>
+</main>
+
+<footer>
+  <span>Indira Gandhi National Open University</span>. All Rights Reserved. &nbsp;|&nbsp; Grade Card Portal
+</footer>
+
+<script>
+const students = [
+  { enrollment:"24908520482026", name:"Saurav Halder", fatherName:"Kishan Halder", phone:"8595617016", email:"sauravhalder2005@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:72},{name:"BCS-111",credits:4,marks:81},{name:"BCS-012",credits:4,marks:67},{name:"BCSL-013",credits:2,marks:85}] },
+  { enrollment:"24908520482027", name:"Rohit Kumar", fatherName:"Mahesh Kumar", phone:"9123456780", email:"rohitkumar@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:65},{name:"BCS-111",credits:4,marks:78},{name:"BCS-012",credits:4,marks:60},{name:"BCSL-013",credits:2,marks:80}] },
+  { enrollment:"24908520482028", name:"Aman Verma", fatherName:"Suresh Verma", phone:"9812345678", email:"amanverma@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:70},{name:"BCS-111",credits:4,marks:75},{name:"BCS-012",credits:4,marks:68},{name:"BCSL-013",credits:2,marks:82}] },
+  { enrollment:"24908520482029", name:"Neha Singh", fatherName:"Rajesh Singh", phone:"9876543210", email:"nehasingh@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:80},{name:"BCS-111",credits:4,marks:85},{name:"BCS-012",credits:4,marks:74},{name:"BCSL-013",credits:2,marks:88}] },
+  { enrollment:"24908520482030", name:"Priya Sharma", fatherName:"Ramesh Sharma", phone:"9001122334", email:"priyasharma@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:76},{name:"BCS-111",credits:4,marks:79},{name:"BCS-012",credits:4,marks:71},{name:"BCSL-013",credits:2,marks:84}] },
+  { enrollment:"24908520482031", name:"Vikas Yadav", fatherName:"Ram Yadav", phone:"9988776655", email:"vikasyadav@gmail.com", programme:"BCA", code:"BCA_OL", status:"Fail", subjects:[{name:"FEG-02",credits:4,marks:40},{name:"BCS-111",credits:4,marks:55},{name:"BCS-012",credits:4,marks:32},{name:"BCSL-013",credits:2,marks:60}] },
+  { enrollment:"24908520482032", name:"Ankit Gupta", fatherName:"Sunil Gupta", phone:"8899776655", email:"ankitgupta@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:68},{name:"BCS-111",credits:4,marks:74},{name:"BCS-012",credits:4,marks:69},{name:"BCSL-013",credits:2,marks:78}] },
+  { enrollment:"24908520482033", name:"Simran Kaur", fatherName:"Harpreet Singh", phone:"9090909090", email:"simrankaur@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:82},{name:"BCS-111",credits:4,marks:87},{name:"BCS-012",credits:4,marks:79},{name:"BCSL-013",credits:2,marks:90}] },
+  { enrollment:"24908520482034", name:"Rahul Das", fatherName:"Sanjay Das", phone:"8811223344", email:"rahuldas@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:64},{name:"BCS-111",credits:4,marks:70},{name:"BCS-012",credits:4,marks:66},{name:"BCSL-013",credits:2,marks:75}] },
+  { enrollment:"24908520482035", name:"Karan Mehta", fatherName:"Ravi Mehta", phone:"7766554433", email:"karanmehta@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:77},{name:"BCS-111",credits:4,marks:83},{name:"BCS-012",credits:4,marks:72},{name:"BCSL-013",credits:2,marks:85}] },
+  { enrollment:"24908520482036", name:"Pooja Verma", fatherName:"Amit Verma", phone:"6655443322", email:"poojaverma@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:81},{name:"BCS-111",credits:4,marks:86},{name:"BCS-012",credits:4,marks:78},{name:"BCSL-013",credits:2,marks:89}] },
+  { enrollment:"24908520482037", name:"Deepak Mishra", fatherName:"Rakesh Mishra", phone:"5544332211", email:"deepakmishra@gmail.com", programme:"BCA", code:"BCA_OL", status:"Fail", subjects:[{name:"FEG-02",credits:4,marks:45},{name:"BCS-111",credits:4,marks:50},{name:"BCS-012",credits:4,marks:35},{name:"BCSL-013",credits:2,marks:55}] },
+  { enrollment:"24908520482038", name:"Sneha Kapoor", fatherName:"Raj Kapoor", phone:"4433221100", email:"snehakapoor@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:79},{name:"BCS-111",credits:4,marks:84},{name:"BCS-012",credits:4,marks:76},{name:"BCSL-013",credits:2,marks:88}] },
+  { enrollment:"24908520482039", name:"Arjun Nair", fatherName:"Ravi Nair", phone:"3322110099", email:"arjunnair@gmail.com", programme:"BCA", code:"BCA_OL", status:"Pass", subjects:[{name:"FEG-02",credits:4,marks:73},{name:"BCS-111",credits:4,marks:80},{name:"BCS-012",credits:4,marks:69},{name:"BCSL-013",credits:2,marks:82}] }
+];
+
+function hideAll() {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('result').style.display = 'none';
+  document.getElementById('no-record').style.display = 'none';
+}
+
+function handleSearch() {
+  const input = document.getElementById('enrollInput').value.trim();
+  const errMsg = document.getElementById('errMsg');
+
+  // Validate
+  errMsg.style.display = 'none';
+  if (!/^\d{14}$/.test(input)) {
+    errMsg.style.display = 'block';
+    return;
+  }
+
+  hideAll();
+  document.getElementById('loading').style.display = 'block';
+
+  setTimeout(() => {
+    document.getElementById('loading').style.display = 'none';
+    const student = students.find(s => s.enrollment === input);
+    if (!student) {
+      document.getElementById('no-record').style.display = 'block';
+    } else {
+      renderResult(student);
+    }
+  }, 1000);
+}
+
+function renderResult(s) {
+  const totalMarks = s.subjects.reduce((a, b) => a + b.marks, 0);
+  const maxMarks   = s.subjects.reduce((a, b) => a + 100, 0);
+  const pct        = ((totalMarks / maxMarks) * 100).toFixed(2);
+
+  const rows = s.subjects.map(sub => `
+    <tr>
+      <td class="subj">${sub.name}</td>
+      <td>${sub.credits}</td>
+      <td class="marks-val">${sub.marks} / 100</td>
+    </tr>
+  `).join('');
+
+  const statusClass = s.status === 'Pass' ? 'status-pass' : 'status-fail';
+
+  const html = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="rh-left">
+          <h3>${s.name}</h3>
+          <p>Enrollment No: ${s.enrollment} &nbsp;·&nbsp; Programme: ${s.programme} (${s.code})</p>
+        </div>
+        <div class="status-badge ${statusClass}">${s.status}</div>
+      </div>
+
+      <div class="info-grid">
+        <div class="info-item"><div class="lbl">Father's Name</div><div class="val">${s.fatherName}</div></div>
+        <div class="info-item"><div class="lbl">Phone</div><div class="val">${s.phone}</div></div>
+        <div class="info-item"><div class="lbl">Email</div><div class="val">${s.email}</div></div>
+        <div class="info-item"><div class="lbl">Programme Code</div><div class="val">${s.code}</div></div>
+      </div>
+
+      <div class="table-section">
+        <h4>Subject-wise Marks</h4>
+        <table>
+          <thead>
+            <tr>
+              <th>Subject Code</th>
+              <th>Credits</th>
+              <th>Marks Obtained</th>
+            </tr>
+          </thead>
+          <tbody>${rows}</tbody>
+        </table>
+        <div class="summary-row">
+          <div class="summary-chip">Total Marks: <span>${totalMarks} / ${maxMarks}</span></div>
+          <div class="summary-chip pct">Percentage: <span>${pct}%</span></div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  const el = document.getElementById('result');
+  el.innerHTML = html;
+  el.style.display = 'block';
+  el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Allow Enter key
+document.getElementById('enrollInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') handleSearch();
+});
+</script>
+</body>
+</html>
